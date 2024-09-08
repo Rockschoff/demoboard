@@ -19,7 +19,9 @@ np.random.seed(42)
 data_points = pd.DataFrame({
     'latitude': np.random.uniform(30, 48, 5),  # Latitude range for USA
     'longitude': np.random.uniform(-125, -70, 5),  # Longitude range for USA
-    'past_score': np.random.randint(50, 100, 5)  # Random past scores between 50 and 100
+    'past_score': np.random.randint(50, 100, 5),
+    'current_score': np.random.randint(50, 100, 5),
+    'future_score': np.random.randint(50, 100, 5)  # Random past scores between 50 and 100
 })
 
 # Load US states data
@@ -39,7 +41,7 @@ base = alt.Chart(states).mark_geoshape(
 points = alt.Chart(data_points).mark_circle(size=100).encode(
     longitude='longitude:Q',
     latitude='latitude:Q',
-    tooltip=['latitude:Q', 'longitude:Q', 'past_score:Q'],
+    tooltip=[ 'past_score:Q' , 'current_score:Q' , 'future_score:Q'],
     color=alt.condition(selection, alt.value('lightblue'), alt.value('gray'))  # Highlight selected point
 ).add_selection(
     selection  # Add click selection
