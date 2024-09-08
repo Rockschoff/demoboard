@@ -1,6 +1,5 @@
 openai
 vega_datasets
-enum
 pydantic
 streamlit
 pandas
