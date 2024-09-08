@@ -3,6 +3,6 @@ vega_datasets
 pydantic
 streamlit
 pandas
-altain
+altair
 uuid
 numpy
