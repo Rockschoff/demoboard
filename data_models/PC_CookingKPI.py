@@ -35,22 +35,24 @@ class PC_CookingKPIDataModel(KPIDataModel):
         match corr_chart_name:
             case "Complaints vs Temperatures":
                 # Resample the temperature data (as you already have)
-                resampled = self.temperature.set_index("Timestamp")["Temperature"].resample("W").mean().reset_index()
-                # print("Dank" , resampled)
+                # print("Tank" , self.temperature)
+                self.temperature['Timestamp'] = pd.to_datetime(self.temperature['Timestamp'])
+                resampled = self.temperature.set_index("Timestamp")["Temperature"].resample("1D").mean().reset_index()
+                # print("Dank", len(resampled) , resampled)
                 # Group by the 'Timestamp' column and sum the 'Complaints_Count' column
                 cc = self.customer_complaints.groupby('Timestamp')['Complaints_Count'].sum().reset_index()
 
-                # print("Fank" , self.customer_complaints)
+                
                 # Remove the time component from the `Timestamp` column in `self.customer_complaints` to match the resampled data
                 cc['Timestamp'] = pd.to_datetime(cc['Timestamp']).dt.date
-
+                print("Fank" , cc)
                 # Also convert the `Timestamp` in the `resampled` data to just the date
                 resampled['Timestamp'] = pd.to_datetime(resampled['Timestamp']).dt.date
 
                 # Merge the resampled temperature data with the customer complaints
                 merged = pd.merge(cc, resampled, on="Timestamp", how="left")
                 merged.rename(columns={"Temperature" : "Avg_Temp"} , inplace=True)
-                
+                print(merged)
                 corr_data = merged
 
                 # Create a scatter plot to show the correlation between Complaints_Count and Temperature

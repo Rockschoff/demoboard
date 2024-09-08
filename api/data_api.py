@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 @st.cache_data
 def generate_real_time_temp()->pd.DataFrame:
     # Define start and end time range for each day
-    start_time = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0) - timedelta(weeks=1)
+    start_time = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0) - timedelta(weeks=20)
     end_time = datetime.now().replace(hour=18, minute=0, second=0, microsecond=0) - timedelta(days=1)
 
     time_range = pd.date_range(start=start_time, end=end_time, freq='2T')
@@ -27,6 +27,7 @@ def generate_real_time_temp()->pd.DataFrame:
     line_ids = np.tile([1, 2, 3], len(time_range))
     temperatures = np.concatenate([temperature_data_line1, temperature_data_line2, temperature_data_line3])
 
+    
     # Create the final DataFrame
     temperature_df = pd.DataFrame({
         'Timestamp': repeated_time_range,
@@ -49,7 +50,8 @@ def generate_real_time_temp()->pd.DataFrame:
         if len(daily_line3_idx) >= 7:
             last_7_idx = daily_line3_idx[-7:]
             temperature_df.loc[last_7_idx, 'Temperature'] = np.random.uniform(155, 160, size=7)
-
+    temperature_df["Timestamp"]=pd.to_datetime(temperature_df["Timestamp"])
+    print( "WwWwwwwwwwwwwwwwww",temperature_df)
     return temperature_df
 
 
