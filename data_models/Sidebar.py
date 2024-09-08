@@ -2,6 +2,7 @@ import streamlit as st
 # from config import OPENAI_API_KEY , OPENAI_MODEL
 from openai import OpenAI
 from enum import Enum
+import time
 
 
 
@@ -9,6 +10,7 @@ from enum import Enum
 class OpenAI_LLM:
     api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else ""
     model_name = st.secrets["OPENAI_MODEL"] if "OPENAI_MODEL" in st.secrets else ""
+    assistant_id = st.secrets["OPENAI_ASSISTANT_ID"] if "OPENAI_ASSISTANT_ID" in st.secrets else ""
 
     def __init__(self) -> None:
         self.client = OpenAI(api_key=self.api_key)
@@ -20,11 +22,30 @@ class OpenAI_LLM:
     def get_reponse(self , chat_history)->str:
 
         self.system_message= self.system_message+ f"{st.session_state.app.generate_app_state()}" + """ Please make good use of this infomration to answer the user queries"""
-        completion = self.client.chat.completions.create(
+        run = self.client.beta.threads.create_and_run(
+            assistant_id=self.assistant_id,
             model = self.model_name,
-            messages = [{"role" : "system" , "content" : self.system_message}]+[{"role" : message['sender'], "content" : message["message"] } for message in chat_history]
+            thread =  {
+                "messages":[{"role" : message['sender'], "content" : message["message"] } for message in chat_history]
+                },
+
+            tool_choice={"type": "file_search"},
+            instructions=self.system_message
         )
-        return completion.choices[0].message.content
+        def wait_on_run(run):
+            
+            while run.status == "queued" or run.status == "in_progress":
+                print("Waiting")
+                run = self.client.beta.threads.runs.retrieve(
+                    thread_id=run.thread_id,
+                    run_id=run.id,
+                )
+                time.sleep(0.5)
+            return run
+        run = wait_on_run(run)
+        messages = self.client.beta.threads.messages.list(thread_id=run.thread_id)
+        # print(messages.data[0])
+        return messages.data[0].content[0].text.value
 
 
 
