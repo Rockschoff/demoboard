@@ -1,5 +1,5 @@
 import streamlit as st
-from config import OPENAI_API_KEY , OPENAI_MODEL
+# from config import OPENAI_API_KEY , OPENAI_MODEL
 from openai import OpenAI
 from enum import Enum
 
@@ -7,8 +7,8 @@ from enum import Enum
 
 
 class OpenAI_LLM:
-    api_key = OPENAI_API_KEY
-    model_name = OPENAI_MODEL
+    api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else ""
+    model_name = st.secrets["OPENAI_MODEL"] if "OPENAI_MODEL" in st.secrets else ""
 
     def __init__(self) -> None:
         self.client = OpenAI(api_key=self.api_key)
