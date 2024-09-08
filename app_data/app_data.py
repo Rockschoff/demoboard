@@ -49,22 +49,6 @@ app = AppModel(
                     """,
                     data = PC_CookingKPIDataModel()
 
-                ),
-                PC_CookingKPIModel(
-                    name = "Baking",
-                    description="""
-                    measures the accuracy and consistency of maintaining required cooking temperatures during the food production process. This KPI tracks metrics such as the percentage of batches or products that reach and sustain the specified temperature range, the frequency of temperature deviations, and the corrective actions taken when cooking temperatures fall outside the critical limits. The primary intent of this KPI is to ensure that all products are cooked to the correct temperature to effectively eliminate pathogens and ensure product safety. By monitoring this KPI, the organization can prevent undercooked products from reaching consumers, reduce the risk of foodborne illnesses, and ensure compliance with food safety regulations. Consistently achieving the correct cooking temperatures also helps to maintain product quality, including texture and flavor, thereby meeting both safety standards and consumer expectations. 
-                    """,
-                    data=PC_CookingKPIDataModel()
-
-                ),
-                PC_CookingKPIModel(
-                    name = "Raosting",
-                    description="""
-                    measures the accuracy and consistency of maintaining required cooking temperatures during the food production process. This KPI tracks metrics such as the percentage of batches or products that reach and sustain the specified temperature range, the frequency of temperature deviations, and the corrective actions taken when cooking temperatures fall outside the critical limits. The primary intent of this KPI is to ensure that all products are cooked to the correct temperature to effectively eliminate pathogens and ensure product safety. By monitoring this KPI, the organization can prevent undercooked products from reaching consumers, reduce the risk of foodborne illnesses, and ensure compliance with food safety regulations. Consistently achieving the correct cooking temperatures also helps to maintain product quality, including texture and flavor, thereby meeting both safety standards and consumer expectations. 
-                    """,
-                    data=PC_CookingKPIDataModel()
-
                 )
 
             ]

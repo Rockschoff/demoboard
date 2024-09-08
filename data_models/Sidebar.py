@@ -1,6 +1,9 @@
 import streamlit as st
 from config import OPENAI_API_KEY , OPENAI_MODEL
 from openai import OpenAI
+from enum import Enum
+
+
 
 
 class OpenAI_LLM:
@@ -9,12 +12,17 @@ class OpenAI_LLM:
 
     def __init__(self) -> None:
         self.client = OpenAI(api_key=self.api_key)
+        self.system_message = """You are helpful asstant that help people navigate the grpahs and visulations in the IN_Q center dashboard
+         You are FDA Assitant that is alwasys gives actianlbe steps to insights and  ties the insights from the dasboard with FDA rules and regualtions.
+         Here is all the information that is available to you from the dashbaord. In the app data that is provided to you always look at the metrics coming from different charts and address them to the user""" 
 
     
     def get_reponse(self , chat_history)->str:
+
+        self.system_message= self.system_message+ f"{st.session_state.app.generate_app_state()}" + """ Please make good use of this infomration to answer the user queries"""
         completion = self.client.chat.completions.create(
             model = self.model_name,
-            messages = [{"role" : message['sender'], "content" : message["message"] } for message in chat_history]
+            messages = [{"role" : "system" , "content" : self.system_message}]+[{"role" : message['sender'], "content" : message["message"] } for message in chat_history]
         )
         return completion.choices[0].message.content
 

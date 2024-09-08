@@ -118,26 +118,76 @@ class PC_CookingKPIModel(KPIModel):
 
     main_chart : Optional[any] = None
 
-    def get_metrics(self , duration="1D"):
-        return {
-            "line_1" : {
-                "crossing_upper_threshold" : 20,
-                "crossing_lower_threshold" : 0,
-                "average_temperature" : 175,
+    def get_info(self , duration="1D"):
+        main_chart_info= {
+                "line_1": {
+                    "crossing_upper_threshold": {
+                        "value": 20,
+                        "description": "number of times the upper threshold of the baking process was crossed in the last 3 days",
+                        "significance": "This is a quality issue and is worthy of being noted. The process must be regulated, and the issue addressed according to FDA LAW."
+                    },
+                    "crossing_lower_threshold": {
+                        "value": 0,
+                        "description": "number of times the lower threshold of the baking process was crossed in the last 3 days",
+                        "significance": "No critical issue detected, as the lower threshold was not crossed. Normal operation can continue."
+                    },
+                    "average_temperature": {
+                        "value": 175,
+                        "description": "the average temperature of the baking line in the past 3 days in Celsius",
+                        "significance": "This is a normal reading. The ideal temperature is around 174 Celsius, so it is close to the expected range."
+                    }
+                },
+                "line_2": {
+                    "crossing_upper_threshold": {
+                        "value": 20,
+                        "description": "number of times the upper threshold of the baking process was crossed in the last 3 days",
+                        "significance": "This is a quality issue and is worthy of being noted. The process must be regulated, and the issue addressed according to FDA LAW."
+                    },
+                    "crossing_lower_threshold": {
+                        "value": 0,
+                        "description": "number of times the lower threshold of the baking process was crossed in the last 3 days",
+                        "significance": "No critical issue detected, as the lower threshold was not crossed. Normal operation can continue."
+                    },
+                    "average_temperature": {
+                        "value": 175,
+                        "description": "the average temperature of the baking line in the past 3 days in Celsius",
+                        "significance": "This is a normal reading. The ideal temperature is around 174 Celsius, so it is close to the expected range."
+                    }
+                },
+                "line_3": {
+                    "crossing_upper_threshold": {
+                        "value": 20,
+                        "description": "number of times the upper threshold of the baking process was crossed in the last 3 days",
+                        "significance": "This is a quality issue and is worthy of being noted. The process must be regulated, and the issue addressed according to FDA LAW."
+                    },
+                    "crossing_lower_threshold": {
+                        "value": 20,
+                        "description": "number of times the lower threshold of the baking process was crossed in the last 3 days",
+                        "significance": "This is a HYPER CRITICAL ISSUE. This must be reported to everyone, and a procedure for a recall must be investigated as per requirements."
+                    },
+                    "average_temperature": {
+                        "value": 175,
+                        "description": "the average temperature of the baking line in the past 3 days in Celsius",
+                        "significance": "This is just a good-to-know metric. The ideal calculation is about 174 Celsius."
+                    }
+                }
+            }
+        
+        corr_chart_info = {
+            "Complaints vs Temperatures" : {
+                "insight" : "The range of 173.5 degree Celcius and 174.5 degree celcius of weekly average oven temperature have the lowest average product complaints "
             },
-            "line_2" : {
-                "crossing_upper_threshold" : 20,
-                "crossing_lower_threshold" : 0,
-                "average_temperature" : 175,
-            },
-            "line_3" : {
-                "crossing_upper_threshold" : 20,
-                "crossing_lower_threshold" : 0,
-                "average_temperature" : 175,
+            "Yield vs Temperature" : {
+                "insight" : "The range of 173.5 degree Celcius and 174.5 degree celcius of weekly average oven temperature have the highest average yeild"
             }
 
-
         }
+        
+        return {
+            "Main_Chart" : main_chart_info,
+            "Correlation_Chart" : corr_chart_info
+        }
+
     
     def render(self):
 

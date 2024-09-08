@@ -66,7 +66,7 @@ class FocusAreaModel(BaseModel):
         for i in range(len(self.kpis)):
             with cols[i]:
                 st.button(self.kpis[i].name,
-                        type = "primary" if i==self.selected_index else "secondary",
+                        type = "primary" if i==self.selected_index and len(self.kpis)>1 else "secondary",
                         key = self.kpis[i].name+str(uuid4()),
                         use_container_width=True,
                         on_click=set_selected_index,
@@ -89,16 +89,38 @@ class AppModel(BaseModel):
         self.__sidebar.set_parent(self)
         self.__sidebar.render()
         for focus_area in self.focus_areas:
-            container = st.container(border=True)
-            with container:
-                [col1 , col2] = st.columns([4 ,1])
-                col1.subheader(focus_area.name)
-                if col2.button("Investigate",
-                               type="primary",
-                               key=focus_area.name):
-                    focus_area.expanded= not focus_area.expanded
-                if focus_area.expanded:
-                    focus_area.render()
+            # container = st.container(border=True)
+            # with container:
+            #     [col1 , col2] = st.columns([4 ,1])
+            #     col1.subheader(focus_area.name)
+            #     if col2.button("Investigate",
+            #                    type="primary",
+            #                    key=focus_area.name):
+            #         focus_area.expanded= not focus_area.expanded
+            #     if focus_area.expanded:
+            #         focus_area.render()
+            with st.expander(focus_area.name):
+                focus_area.render()
+
+    def generate_app_state(self):
+        ans = []
+        for focus_area in self.focus_areas:
+            fa_info = {
+                "name" : focus_area.name,
+                "description" : focus_area.description,
+                "location" : focus_area.name,
+                "kpis" : []
+            }
+            for kpi in focus_area.kpis:
+                kpi_info = {
+                    "name" : kpi.name,
+                    "description" : kpi.description,
+                    "location" : fa_info["description"]+"/"+kpi.name,
+                    "graphs" : kpi.get_info()
+                }
+                fa_info["kpis"].append(kpi_info)
+            ans.append(fa_info)
+        return ans
 
         
         

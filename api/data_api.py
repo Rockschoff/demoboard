@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 @st.cache_data
 def generate_real_time_temp()->pd.DataFrame:
     # Define start and end time range for each day
-    start_time = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0) - timedelta(weeks=52)
+    start_time = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0) - timedelta(weeks=1)
     end_time = datetime.now().replace(hour=18, minute=0, second=0, microsecond=0) - timedelta(days=1)
 
     time_range = pd.date_range(start=start_time, end=end_time, freq='2T')
@@ -18,8 +18,8 @@ def generate_real_time_temp()->pd.DataFrame:
     base_temps = np.linspace(170, 178, num=len(time_range))
     
     # Add some random fluctuations
-    temperature_data_line1 = base_temps + np.random.normal(0, 1, size=len(time_range))
-    temperature_data_line2 = base_temps + np.random.normal(0, 1, size=len(time_range))
+    temperature_data_line1 = base_temps + np.random.normal(0, 5, size=len(time_range))
+    temperature_data_line2 = base_temps + np.random.normal(-4, 1, size=len(time_range))
     temperature_data_line3 = base_temps + np.random.normal(0, 1, size=len(time_range))
 
     # Prepare the data: repeat each timestamp 3 times, one for each line
@@ -33,6 +33,22 @@ def generate_real_time_temp()->pd.DataFrame:
         'Line_ID': line_ids,
         'Temperature': temperatures
     })
+
+    # Adjust Line 1: Randomly pick 4 values each day and shoot them to a random temp between 180 and 183
+    for date in pd.date_range(start=start_time, end=end_time, freq='D'):
+        daily_line1_idx = temperature_df[(temperature_df['Line_ID'] == 1) & (temperature_df['Timestamp'].dt.date == date.date())].index
+        if len(daily_line1_idx) > 4:
+            random_idx = np.random.choice(daily_line1_idx, size=4, replace=False)
+            temperature_df.loc[random_idx, 'Temperature'] = np.random.uniform(180, 183, size=4)
+
+    # Line 2 temperatures remain as is (no changes needed)
+
+    # Adjust Line 3: Only the last 7 values drop to a random value between 155 and 160
+    for date in pd.date_range(start=start_time, end=end_time, freq='D'):
+        daily_line3_idx = temperature_df[(temperature_df['Line_ID'] == 3) & (temperature_df['Timestamp'].dt.date == date.date())].index
+        if len(daily_line3_idx) >= 7:
+            last_7_idx = daily_line3_idx[-7:]
+            temperature_df.loc[last_7_idx, 'Temperature'] = np.random.uniform(155, 160, size=7)
 
     return temperature_df
 
